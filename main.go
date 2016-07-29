@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -16,7 +17,7 @@ var (
 	defaultSession string
 	dryrun         bool
 
-	tmux           string
+	tmux string
 )
 
 func main() {
@@ -33,6 +34,11 @@ func main() {
 	}
 	defer file.Close()
 
+	if existingSession(session) {
+		attachToSession(session)
+		return
+	}
+
 	for _, arguments := range Parse(session, file) {
 		if dryrun {
 			fmt.Printf("%s %s\n", tmux, strings.Join(arguments, " "))
@@ -48,6 +54,34 @@ func main() {
 		cleanup(session)
 		attachToSession(session)
 	}
+}
+
+func existingSession(session string) bool {
+	cmd := exec.Command(tmux, Args{"ls", "-F", "\"#{session_name}\""}...)
+	fmt.Println(cmd)
+	stdout, err := cmd.StdoutPipe()
+
+	if err != nil {
+		log.Fatalf("OO: %v", err)
+	}
+
+	cmd.Start()
+
+	bytes, _ := ioutil.ReadAll(stdout)
+
+	if err := cmd.Wait(); err != nil {
+		return false
+	}
+
+	fmt.Printf("%+v\n", bytes)
+	sessionName := fmt.Sprintf("\"%s\"", session)
+	for _, line := range strings.Split(string(bytes), "\n") {
+		if sessionName == line {
+			return true
+		}
+	}
+
+	return false
 }
 
 func attachToSession(session string) {
