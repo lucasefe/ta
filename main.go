@@ -8,8 +8,6 @@ import (
 	"os/exec"
 	"path"
 	"strings"
-
-	"ta"
 )
 
 var (
@@ -17,6 +15,7 @@ var (
 	session        string
 	defaultSession string
 	dryrun         bool
+	
 	tmux           string
 )
 
@@ -34,7 +33,7 @@ func main() {
 	}
 	defer file.Close()
 
-	for _, arguments := range ta.Parse(session, file) {
+	for _, arguments := range Parse(session, file) {
 		if dryrun {
 			fmt.Printf("%s %s\n", tmux, strings.Join(arguments, " "))
 		} else {
@@ -52,7 +51,7 @@ func main() {
 }
 
 func attachToSession(session string) {
-	cmd := exec.Command(tmux, ta.Args{"attach-session", "-t", session}...)
+	cmd := exec.Command(tmux, Args{"attach-session", "-t", session}...)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -62,6 +61,6 @@ func attachToSession(session string) {
 func cleanup(session string) {
 	action := "tmux kill-window -t 1"
 	target := fmt.Sprintf("%s:1", session)
-	args := ta.Args{"send-keys", "-t", target, action, "C-m"}
+	args := Args{"send-keys", "-t", target, action, "C-m"}
 	exec.Command(tmux, args...).Run()
 }

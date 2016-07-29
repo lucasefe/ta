@@ -1,4 +1,4 @@
-package ta
+package main
 
 import (
 	"bufio"
