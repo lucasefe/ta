@@ -40,7 +40,7 @@ func main() {
 			log.Printf("args: %+v, err: %v\n", arguments, err)
 		}
 	}
-
+	cleanup(session, dryrun)
 	attachToSession(session, dryrun)
 }
 
@@ -52,6 +52,7 @@ func runTmuxCommand(arguments ta.Args, dryrun bool) error {
 
 	return exec.Command(tmux, arguments...).Run()
 }
+
 func attachToSession(session string, dryrun bool) {
 	if dryrun {
 		return
@@ -62,4 +63,15 @@ func attachToSession(session string, dryrun bool) {
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Run()
+}
+
+func cleanup(session string, dryrun bool) {
+	if dryrun {
+		return
+	}
+
+	action := "tmux kill-window -t 1"
+	target := fmt.Sprintf("%s:1", session)
+	args := ta.Args{"send-keys", "-t", target, action, "C-m"}
+	exec.Command(tmux, args...).Run()
 }

@@ -60,7 +60,6 @@ func Parse(session string, file *os.File) (cmds []Args) {
 
 	}
 
-	cmds = append(cmds, cleanupCommands(session))
 	return
 }
 
@@ -106,8 +105,4 @@ func setupCommands(session string) Args {
 
 func killCommands(session string) Args {
 	return Args{"kill-session", "-t", session}
-}
-
-func cleanupCommands(session string) Args {
-	return Args{"kill-window", "-t", session, fmt.Sprintf("%s:$( tmux list-windows -t %s -F \"1\" | head -n 1 )", session, session)}
 }
