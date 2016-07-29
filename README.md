@@ -16,3 +16,13 @@ Check the file located in [examples/.ta](https://github.com/lucasefe/ta/blob/mas
 ## Inspiration
 
 Mainly, [tmuxify](https://github.com/tonchis/tmuxify) from [Tonchis](https://github.com/tonchis)
+
+## .ta example file
+
+```
+win1 c vim
+win1 v foreman start
+win1 h bash
+win2 c tail -f log/*.log
+win2 h htop
+```
