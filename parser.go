@@ -25,7 +25,7 @@ func Parse(session string, file *os.File) (cmds []Args) {
 		line := scanner.Text()
 		arr := strings.SplitN(line, " ", 3)
 
-		if len(arr) != 2 {
+		if len(arr) < 2 {
 			continue
 		}
 
@@ -80,7 +80,7 @@ func contains(arr Args, v1 string) bool {
 }
 
 func newWindow(session, window string) Args {
-	return Args{"new-window", "-a", "-t", session, "-n", window, "-c", "$PWD"}
+	return Args{"new-window", "-a", "-t", session, "-n", window, "-c", os.Getenv("PWD")}
 }
 
 func splitWindow(session, window, split, target string) Args {
