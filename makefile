@@ -1,6 +1,4 @@
-export GOPATH=$(PWD)
-
-all: build
+all: bin/ta
 
 bin/ta: *.go bin
 	go build -o $@

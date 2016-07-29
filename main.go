@@ -58,7 +58,6 @@ func main() {
 
 func existingSession(session string) bool {
 	cmd := exec.Command(tmux, Args{"ls", "-F", "\"#{session_name}\""}...)
-	fmt.Println(cmd)
 	stdout, err := cmd.StdoutPipe()
 
 	if err != nil {

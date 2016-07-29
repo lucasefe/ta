@@ -25,14 +25,18 @@ func Parse(session string, file *os.File) (cmds []Args) {
 		line := scanner.Text()
 		arr := strings.SplitN(line, " ", 3)
 
-		if len(arr) != 3 {
+		if len(arr) != 2 {
 			continue
 		}
 
 		window := arr[0]
-		action := arr[2]
 		operation := arr[1]
 		target := ""
+		action := ""
+
+		if len(arr) == 3 {
+			action = arr[2]
+		}
 
 		if len(operation) > 1 {
 			target = operation[0:(len(operation) - 1)]
@@ -47,17 +51,19 @@ func Parse(session string, file *os.File) (cmds []Args) {
 
 			windows = append(windows, window)
 			cmds = append(cmds, newWindow(session, window))
-			cmds = append(cmds, sendKeys(session, window, action))
-
+			if action != "" {
+				cmds = append(cmds, sendKeys(session, window, action))
+			}
 		case horizontal, vertical:
 			if !contains(windows, window) {
 				log.Fatalf("need to create the window first before splitting it: %v", line)
 			}
 
 			cmds = append(cmds, splitWindow(session, window, tmuxSplit(operation), target))
-			cmds = append(cmds, sendKeys(session, window, action))
+			if action != "" {
+				cmds = append(cmds, sendKeys(session, window, action))
+			}
 		}
-
 	}
 
 	return
