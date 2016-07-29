@@ -35,29 +35,23 @@ func main() {
 	defer file.Close()
 
 	for _, arguments := range ta.Parse(session, file) {
-		err := runTmuxCommand(arguments, dryrun)
-		if err != nil {
-			log.Printf("args: %+v, err: %v\n", arguments, err)
+		if dryrun {
+			fmt.Printf("%s %s\n", tmux, strings.Join(arguments, " "))
+		} else {
+			err := exec.Command(tmux, arguments...).Run()
+			if err != nil {
+				log.Printf("args: %+v, err: %v\n", arguments, err)
+			}
 		}
 	}
-	cleanup(session, dryrun)
-	attachToSession(session, dryrun)
+
+	if !dryrun {
+		cleanup(session)
+		attachToSession(session)
+	}
 }
 
-func runTmuxCommand(arguments ta.Args, dryrun bool) error {
-	if dryrun {
-		fmt.Printf("%s %s\n", tmux, strings.Join(arguments, " "))
-		return nil
-	}
-
-	return exec.Command(tmux, arguments...).Run()
-}
-
-func attachToSession(session string, dryrun bool) {
-	if dryrun {
-		return
-	}
-
+func attachToSession(session string) {
 	cmd := exec.Command(tmux, ta.Args{"attach-session", "-t", session}...)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
@@ -65,11 +59,7 @@ func attachToSession(session string, dryrun bool) {
 	cmd.Run()
 }
 
-func cleanup(session string, dryrun bool) {
-	if dryrun {
-		return
-	}
-
+func cleanup(session string) {
 	action := "tmux kill-window -t 1"
 	target := fmt.Sprintf("%s:1", session)
 	args := ta.Args{"send-keys", "-t", target, action, "C-m"}
