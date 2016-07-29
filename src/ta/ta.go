@@ -14,8 +14,10 @@ const (
 	vertical   = "v"
 )
 
-func Parse(session string, file *os.File) (cmds []string) {
-	windows := []string{}
+type Args []string
+
+func Parse(session string, file *os.File) (cmds []Args) {
+	windows := Args{}
 	scanner := bufio.NewScanner(file)
 
 	cmds = append(cmds, setupCommands(session))
@@ -62,7 +64,7 @@ func Parse(session string, file *os.File) (cmds []string) {
 	return
 }
 
-func contains(arr []string, v1 string) bool {
+func contains(arr Args, v1 string) bool {
 	for _, v2 := range arr {
 		if v1 == v2 {
 			return true
@@ -72,20 +74,22 @@ func contains(arr []string, v1 string) bool {
 	return false
 }
 
-func newWindow(session, window string) string {
-	return fmt.Sprintf("tmux new-window -a -t %s -n %s -c $PWD", session, window)
+func newWindow(session, window string) Args {
+	return Args{"new-window", "-a", "-t", session, "-n", window, "-c", "$PWD"}
 }
 
-func splitWindow(session, window, split, target string) string {
+func splitWindow(session, window, split, target string) Args {
 	if target != "" {
 		target = fmt.Sprintf(".%s", target)
 	}
 
-	return fmt.Sprintf("tmux split-window -t %s:%s%s -%s", session, window, target, split)
+	target = fmt.Sprintf("%s:%s%s", session, window, target)
+	return Args{"split-window", "-t", target, fmt.Sprintf("-%s", split)}
 }
 
-func sendKeys(session, window, action string) string {
-	return fmt.Sprintf("tmux send-keys -t %s:%s \"%s\" C-m", session, window, action)
+func sendKeys(session, window, action string) Args {
+	target := fmt.Sprintf("%s:%s", session, window)
+	return Args{"send-keys", "-t", target, action, "C-m"}
 }
 
 func tmuxSplit(operation string) string {
@@ -96,14 +100,14 @@ func tmuxSplit(operation string) string {
 	return "h"
 }
 
-func setupCommands(session string) string {
-	return fmt.Sprintf("tmux new-session -s %s -d", session)
+func setupCommands(session string) Args {
+	return Args{"new-session", "-d", "-s", session}
 }
 
-func killCommands(session string) string {
-	return fmt.Sprintf("tmux kill-session -t %s ", session)
+func killCommands(session string) Args {
+	return Args{"kill-session", "-t", session}
 }
 
-func cleanupCommands(session string) string {
-	return fmt.Sprintf("tmux kill-window -t %s:$( tmux list-windows -t %s -F \"1\" | head -n 1 );  tmux attach-session -t %s", session, session, session)
+func cleanupCommands(session string) Args {
+	return Args{"kill-window", "-t", session, fmt.Sprintf("%s:$( tmux list-windows -t %s -F \"1\" | head -n 1 )", session, session)}
 }
