@@ -11,7 +11,7 @@ We've found that having a tmux session open per project greatly reduces the cost
 
 There are multiple other tools that accomplish this, but they are often very complex, while designing `ta` we purposely attempted to do away with all that accidental complexity: one shouldn't think about `ta` as a layout manager but as a simple way to write and execute a set of tmux commands, basic tmux knowledge is assumed, as it does most of the work.
 
-## Example // Syntax
+##  Configuration file
 
 When executed, `ta` will look for a `.ta` file in your current directory and set up a tmux session described by it, the `.ta` file will have one command per line on the following form:
 
