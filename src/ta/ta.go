@@ -34,7 +34,7 @@ func Parse(session string, file *os.File) (cmds []string) {
 
 		if len(operation) > 1 {
 			target = operation[0:(len(operation) - 1)]
-			operation = operation[len(operation)-1 : len(operation)]
+			operation = operation[len(operation)-1:]
 		}
 
 		switch operation {
@@ -105,5 +105,5 @@ func killCommands(session string) string {
 }
 
 func cleanupCommands(session string) string {
-	return fmt.Sprintf("tmux kill-window -t %s:$( tmux list-windows -t %s -F \"1\" | head -n 1 ); sleep 2; tmux attach-session -t %s", session, session, session)
+	return fmt.Sprintf("tmux kill-window -t %s:$( tmux list-windows -t %s -F \"1\" | head -n 1 );  tmux attach-session -t %s", session, session, session)
 }
