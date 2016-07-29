@@ -29,7 +29,7 @@ When executed, `ta` will look for a `.ta` file in your current directory and set
 * `v` - stands for `vertical split`
 * `h` - stands for `horizontal split`
 
-`[command]` is an optional set of bash commands to execute in the **resulting** pane that is created by a given command.
+`[command]` is an optional set of bash commands to execute in the **resulting** pane that is created by a given line.
 
 
 Take some time to check the [example .ta file](https://github.com/lucasefe/ta/blob/master/examples/.ta) and to play around with different configurations.
