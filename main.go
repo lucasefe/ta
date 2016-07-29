@@ -21,8 +21,8 @@ var (
 )
 
 func main() {
-	defaultSession = path.Base(os.Getenv("PWD"))
 	tmux = "/usr/local/bin/tmux"
+	defaultSession = path.Base(os.Getenv("PWD"))
 	flag.StringVar(&config, "f", ".ta", "the ta config file")
 	flag.StringVar(&session, "s", defaultSession, "session name")
 	flag.BoolVar(&dryrun, "d", false, "dry run mode")
@@ -35,26 +35,31 @@ func main() {
 	defer file.Close()
 
 	for _, arguments := range ta.Parse(session, file) {
-		err := runTmuxCommand(arguments)
+		err := runTmuxCommand(arguments, dryrun)
 		if err != nil {
 			log.Printf("args: %+v, err: %v\n", arguments, err)
 		}
 	}
 
-	if !dryrun {
-		cmd := exec.Command(tmux, ta.Args{"attach-session", "-t", session}...)
-		cmd.Stdout = os.Stdout
-		cmd.Stdin = os.Stdin
-		cmd.Stderr = os.Stderr
-		cmd.Run()
-	}
+	attachToSession(session, dryrun)
 }
 
-func runTmuxCommand(arguments ta.Args) error {
+func runTmuxCommand(arguments ta.Args, dryrun bool) error {
 	if dryrun {
 		fmt.Printf("%s %s\n", tmux, strings.Join(arguments, " "))
 		return nil
 	}
 
 	return exec.Command(tmux, arguments...).Run()
+}
+func attachToSession(session string, dryrun bool) {
+	if dryrun {
+		return
+	}
+
+	cmd := exec.Command(tmux, ta.Args{"attach-session", "-t", session}...)
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }
