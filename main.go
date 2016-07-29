@@ -15,7 +15,7 @@ var (
 	session        string
 	defaultSession string
 	dryrun         bool
-	
+
 	tmux           string
 )
 
@@ -60,7 +60,5 @@ func attachToSession(session string) {
 
 func cleanup(session string) {
 	action := "tmux kill-window -t 1"
-	target := fmt.Sprintf("%s:1", session)
-	args := Args{"send-keys", "-t", target, action, "C-m"}
-	exec.Command(tmux, args...).Run()
+	exec.Command(tmux, sendKeys(session, "1", action)...).Run()
 }
