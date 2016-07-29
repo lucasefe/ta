@@ -1,3 +1,5 @@
+export GOPATH=$(PWD)
+
 all: build
 
 build: *.go bin
