@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	active     = "a"
 	create     = "n"
 	horizontal = "h"
 	vertical   = "v"
@@ -68,6 +69,11 @@ func Parse(session string, file *os.File) (cmds []Args) {
 			if action != "" {
 				cmds = append(cmds, sendKeys(session, window, action))
 			}
+		case active:
+			cmds = append(cmds, selectWindow(session, window))
+			if target != "" {
+				cmds = append(cmds, selectPane(session, target))
+			}
 		}
 	}
 
@@ -86,6 +92,16 @@ func contains(arr Args, v1 string) bool {
 
 func newWindow(session, window string) Args {
 	return Args{"new-window", "-a", "-t", session, "-n", window, "-c", os.Getenv("PWD")}
+}
+
+func selectWindow(session, window string) Args {
+	target := fmt.Sprintf("%s:%s", session, window)
+	return Args{"select-window", "-t", target}
+}
+
+func selectPane(session, target string) Args {
+	pane := fmt.Sprintf("%s.%s", session, target)
+	return Args{"select-pane", "-t", pane}
 }
 
 func splitWindow(session, window, split, target string) Args {
