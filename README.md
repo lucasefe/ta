@@ -47,4 +47,5 @@ win1 v foreman start
 win1 h bash
 win2 c tail -f log/*.log
 win2 h htop
+win1 a echo window win 1, will be active after all
 ```
