@@ -35,6 +35,17 @@ When executed, `ta` will look for a `.ta` file in your current directory and set
 
 Take some time to check the [example .ta file](https://github.com/lucasefe/ta/blob/master/examples/.ta) and to play around with different configurations.
 
+## Installation
+
+With [homebrew](http://brew.sh/): 
+
+```
+brew tap lucasefe/ta
+brew install ta
+```
+
+Other platforms, download from [releases](https://github.com/lucasefe/ta/releases) page.
+
 ## Inspiration
 
 Mainly, [tmuxify](https://github.com/tonchis/tmuxify) from [Tonchis](https://github.com/tonchis)
@@ -49,3 +60,5 @@ win2 c tail -f log/*.log
 win2 h htop
 win1 a echo window win 1, will be active after all
 ```
+
+
