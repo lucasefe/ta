@@ -34,6 +34,11 @@ func Parse(session string, file *os.File) (cmds []Args) {
 		target := ""
 		action := ""
 
+		// Skip comments
+		if string(window[0]) == "#" {
+			continue
+		}
+
 		if len(arr) == 3 {
 			action = arr[2]
 		}
