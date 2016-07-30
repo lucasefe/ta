@@ -28,6 +28,7 @@ When executed, `ta` will look for a `.ta` file in your current directory and set
 * `c` - stands for `create`, you need to call this the first time you reference a window or the command will fail.
 * `v` - stands for `vertical split`
 * `h` - stands for `horizontal split`
+* `a` - stands for `active pane` on a given window
 
 `[command]` is an optional set of bash commands to execute in the **resulting** pane that is created by a given line.
 

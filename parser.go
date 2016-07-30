@@ -56,7 +56,9 @@ func Parse(session string, file *os.File) (cmds []Args) {
 			}
 
 			windows = append(windows, window)
+
 			cmds = append(cmds, newWindow(session, window))
+
 			if action != "" {
 				cmds = append(cmds, sendKeys(session, window, action))
 			}
@@ -66,13 +68,19 @@ func Parse(session string, file *os.File) (cmds []Args) {
 			}
 
 			cmds = append(cmds, splitWindow(session, window, tmuxSplit(operation), target))
+
 			if action != "" {
 				cmds = append(cmds, sendKeys(session, window, action))
 			}
 		case active:
 			cmds = append(cmds, selectWindow(session, window))
+
 			if target != "" {
 				cmds = append(cmds, selectPane(session, target))
+			}
+
+			if action != "" {
+				cmds = append(cmds, sendKeys(session, window, action))
 			}
 		}
 	}
