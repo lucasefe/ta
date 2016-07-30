@@ -56,32 +56,23 @@ func Parse(session string, file *os.File) (cmds []Args) {
 			}
 
 			windows = append(windows, window)
-
 			cmds = append(cmds, newWindow(session, window))
-
-			if action != "" {
-				cmds = append(cmds, sendKeys(session, window, action))
-			}
 		case horizontal, vertical:
 			if !contains(windows, window) {
 				log.Fatalf("need to create the window first before splitting it: %v", line)
 			}
 
 			cmds = append(cmds, splitWindow(session, window, tmuxSplit(operation), target))
-
-			if action != "" {
-				cmds = append(cmds, sendKeys(session, window, action))
-			}
 		case active:
 			cmds = append(cmds, selectWindow(session, window))
 
 			if target != "" {
 				cmds = append(cmds, selectPane(session, target))
 			}
+		}
 
-			if action != "" {
-				cmds = append(cmds, sendKeys(session, window, action))
-			}
+		if action != "" {
+			cmds = append(cmds, sendKeys(session, window, action))
 		}
 	}
 
