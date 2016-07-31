@@ -1,6 +1,6 @@
-uno n echo uno
+uno c echo uno
 uno v echo 5
 #
 
-dos 1n echo new
+dos 1c echo new
 dos a

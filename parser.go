@@ -11,7 +11,7 @@ import (
 
 const (
 	active     = "a"
-	create     = "n"
+	create     = "c"
 	horizontal = "h"
 	vertical   = "v"
 )
@@ -28,6 +28,7 @@ func Parse(session string, file *os.File) (cmds []Args) {
 		captures, err := ParseLine(line)
 
 		if err != nil {
+			log.Printf("Skipped: '%v'. Err: %v. Got: %+v", line, err, captures)
 			continue
 		}
 
@@ -35,11 +36,6 @@ func Parse(session string, file *os.File) (cmds []Args) {
 		operation := captures["operation"]
 		target := captures["target"]
 		action := captures["action"]
-
-		// Skip comments
-		if string(window[0]) == "#" {
-			continue
-		}
 
 		if len(operation) > 1 {
 			target = operation[0:(len(operation) - 1)]
@@ -131,7 +127,7 @@ func killCommands(session string) Args {
 }
 
 func ParseLine(line string) (map[string]string, error) {
-	var re = regexp.MustCompile(`(?P<window>[a-z]*)\s(?P<target>\d?)(?P<operation>[nvha])\s(?P<action>.*)`)
+	var re = regexp.MustCompile(`(?P<window>[a-z]*)\s(?P<target>\d?)(?P<operation>[cvha])(?P<action>.*?)`)
 	match := re.FindStringSubmatch(line)
 	captures := make(map[string]string)
 

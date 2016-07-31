@@ -1,10 +1,10 @@
-uno n echo izquierda solo
+uno c echo izquierda solo
 uno v echo derecha arriba
 uno h echo derecha abajo
-dos n echo arriba solo
+dos c echo arriba solo
 dos h echo abajo izquierda
 dos v echo abajo derecha
-tres n  echo izquierda arriba
+tres c  echo izquierda arriba
 tres v  echo derecha arriba
 tres h  echo derecha abajo
 tres 1h echo izquierda abajo
