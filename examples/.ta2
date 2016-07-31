@@ -1,2 +1,6 @@
 uno n echo uno
-uno v 
+uno v echo 5
+#
+
+dos 1n echo new
+dos a

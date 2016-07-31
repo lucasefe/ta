@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
-	"strings"
+	"regexp"
 )
 
 const (
@@ -24,24 +25,20 @@ func Parse(session string, file *os.File) (cmds []Args) {
 	cmds = append(cmds, setupCommands(session))
 	for scanner.Scan() {
 		line := scanner.Text()
-		arr := strings.SplitN(line, " ", 3)
+		captures, err := ParseLine(line)
 
-		if len(arr) < 2 {
+		if err != nil {
 			continue
 		}
 
-		window := arr[0]
-		operation := arr[1]
-		target := ""
-		action := ""
+		window := captures["window"]
+		operation := captures["operation"]
+		target := captures["target"]
+		action := captures["action"]
 
 		// Skip comments
 		if string(window[0]) == "#" {
 			continue
-		}
-
-		if len(arr) == 3 {
-			action = arr[2]
 		}
 
 		if len(operation) > 1 {
@@ -131,4 +128,24 @@ func setupCommands(session string) Args {
 
 func killCommands(session string) Args {
 	return Args{"kill-session", "-t", session}
+}
+
+func ParseLine(line string) (map[string]string, error) {
+	var re = regexp.MustCompile(`(?P<window>[a-z]*)\s(?P<target>\d?)(?P<operation>[nvha])\s(?P<action>.*)`)
+	match := re.FindStringSubmatch(line)
+	captures := make(map[string]string)
+
+	if match == nil {
+		return captures, errors.New("Can't parse line")
+	}
+
+	for i, name := range re.SubexpNames() {
+		if i == 0 || name == "" {
+			continue
+		}
+
+		captures[name] = match[i]
+	}
+
+	return captures, nil
 }
