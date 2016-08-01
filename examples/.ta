@@ -8,3 +8,6 @@ tres c  echo izquierda arriba
 tres v  echo derecha arriba
 tres h  echo derecha abajo
 tres 1h echo izquierda abajo
+cuatro c
+cuatro v
+cuatro h echo abajo derecha

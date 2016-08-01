@@ -127,7 +127,7 @@ func killCommands(session string) Args {
 }
 
 func ParseLine(line string) (map[string]string, error) {
-	var re = regexp.MustCompile(`(?P<window>[a-z]*)\s(?P<target>\d?)(?P<operation>[cvha])(?P<action>.*?)`)
+	var re = regexp.MustCompile(`(?P<window>[a-z]*)\s(?P<target>\d?)(?P<operation>[cvha])\s?(?P<action>.*)`)
 	match := re.FindStringSubmatch(line)
 	captures := make(map[string]string)
 
@@ -142,6 +142,8 @@ func ParseLine(line string) (map[string]string, error) {
 
 		captures[name] = match[i]
 	}
+
+	log.Printf("%+v", captures)
 
 	return captures, nil
 }
