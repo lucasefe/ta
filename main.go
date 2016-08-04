@@ -72,7 +72,6 @@ func existingSession(session string) bool {
 		return false
 	}
 
-	fmt.Printf("%+v\n", bytes)
 	sessionName := fmt.Sprintf("\"%s\"", session)
 	for _, line := range strings.Split(string(bytes), "\n") {
 		if sessionName == line {
