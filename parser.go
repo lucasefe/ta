@@ -143,7 +143,5 @@ func ParseLine(line string) (map[string]string, error) {
 		captures[name] = match[i]
 	}
 
-	log.Printf("%+v", captures)
-
 	return captures, nil
 }
