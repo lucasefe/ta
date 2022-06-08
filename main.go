@@ -21,7 +21,7 @@ var (
 )
 
 func main() {
-	tmux = "/usr/local/bin/tmux"
+	tmux = "tmux"
 	defaultSession = path.Base(os.Getenv("PWD"))
 	flag.StringVar(&config, "f", ".ta", "the ta config file")
 	flag.StringVar(&session, "s", defaultSession, "session name")
